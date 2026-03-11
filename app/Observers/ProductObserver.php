@@ -9,11 +9,6 @@ class ProductObserver
 {
     public const LIST_CACHE_KEY = 'products.list';
 
-    public static function productCacheKey(int $id): string
-    {
-        return "product.{$id}";
-    }
-
     public function created(Product $product): void
     {
         $this->invalidateCache();
