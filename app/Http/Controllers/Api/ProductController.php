@@ -7,9 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\{StoreProductRequest, UpdateProductRequest};
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Observers\ProductObserver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\{Cache, Gate};
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
@@ -19,9 +21,20 @@ class ProductController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $products = Product::query()->paginate();
+        $products = Cache::rememberForever(ProductObserver::LIST_CACHE_KEY, fn () => Product::all());
 
-        return ProductResource::collection($products);
+        $page      = (int) request('page', 1);
+        $perPage   = 15;
+        $items     = $products->forPage($page, $perPage)->values();
+        $paginated = new LengthAwarePaginator(
+            $items,
+            $products->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return ProductResource::collection($paginated);
     }
 
     /**
