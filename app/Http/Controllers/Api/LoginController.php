@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
+use App\Http\Resources\Auth\LoginResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
-    public function login(LoginRequest $request): JsonResponse
+    public function __invoke(LoginRequest $request): JsonResponse
     {
         $user = User::where('email', $request->validated('email'))->first();
 
@@ -27,7 +28,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user'  => $user->only(['id', 'name', 'email']),
+            'user'  => new LoginResource($user),
         ]);
     }
 }

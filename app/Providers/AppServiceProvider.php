@@ -23,19 +23,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function (User $user, string $ability) {
+        Gate::before(function (User $user, string $ability): bool|null {
             return $user->role === UserRole::ADMIN ? true : null;
         });
 
-        Gate::define('manage-users', function (User $user) {
+        Gate::define('manage-users', function (User $user): bool {
             return $user->role === UserRole::MANAGER;
         });
 
-        Gate::define('manage-products', function (User $user) {
+        Gate::define('manage-products', function (User $user): bool {
             return in_array($user->role, [UserRole::MANAGER, UserRole::FINANCE]);
         });
 
-        Gate::define('manage-finances', function (User $user) {
+        Gate::define('manage-finances', function (User $user): bool {
             return $user->role === UserRole::FINANCE;
         });
 

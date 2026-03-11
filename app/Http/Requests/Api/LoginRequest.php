@@ -26,18 +26,4 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'string'],
         ];
     }
-
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'email.required'    => 'O e-mail é obrigatório.',
-            'email.email'       => 'O e-mail deve ser válido.',
-            'password.required' => 'A senha é obrigatória.',
-        ];
-    }
 }
