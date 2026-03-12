@@ -19,7 +19,7 @@ class GatewayController extends Controller
     {
         Gate::authorize('manage-finances');
 
-        $gateways = Cache::rememberForever(GatewayObserver::LIST_CACHE_KEY, fn () => Gateway::all());
+        $gateways = Cache::rememberForever(GatewayObserver::LIST_CACHE_KEY, fn () => Gateway::active()->get());
 
         return GatewayResource::collection($gateways);
     }
