@@ -249,6 +249,21 @@ O nome do gateway na tabela `gateways` deve corresponder à chave em `config/gat
 
 ---
 
+## 🧠 Dificuldades Encontradas e Aprendizados
+
+Optei por abraçar o desafio do **Nível 3** (focado em perfis Pleno/Sênior) não apenas para cumprir os requisitos da vaga, mas como uma excelente oportunidade para testar meus próprios limites técnicos e aplicar padrões avançados de projeto na prática.
+
+A maior complexidade que encontrei durante o desenvolvimento foi a **orquestração das transações**. Sincronizar as transações do banco de dados (garantindo as propriedades ACID com `DB::transaction`) simultaneamente com as chamadas às APIs externas dos gateways exigiu um desenho arquitetural muito cuidadoso.
+
+O grande desafio ali era garantir que:
+
+1. O sistema jamais persistisse um estado inconsistente no banco de dados caso a comunicação HTTP com os gateways falhasse no meio do processo.
+2. O fluxo de *fallback* (transição do Gateway 1 para o Gateway 2 em caso de erro) ocorresse de forma limpa, sem estourar exceções não tratadas e sem o risco de duplicar cobranças.
+
+Superar esse obstáculo isolando as responsabilidades com o **Strategy Pattern** e encapsulando a lógica de persistência dentro de uma **Action** foi um processo muito recompensador e resultou em um motor de pagamentos altamente resiliente.
+
+---
+
 ## Licença
 
 Projeto de teste. Consulte o repositório para mais informações.
