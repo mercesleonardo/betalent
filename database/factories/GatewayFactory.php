@@ -17,7 +17,14 @@ class GatewayFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name'      => 'GATEWAY_' . fake()->unique()->numberBetween(1, 99),
+            'is_active' => true,
+            'priority'  => 1,
         ];
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => ['is_active' => false]);
     }
 }
