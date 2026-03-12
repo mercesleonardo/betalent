@@ -40,7 +40,27 @@ class GatewayOneService implements PaymentGatewayInterface
 
     public function refund(string $transactionId): array
     {
-        return [];
+        $config = config('gateways.gateway_one');
+
+        $loginResponse = Http::post($config['url'] . '/login', [
+            'email' => $config['email'],
+            'token' => $config['token'],
+        ]);
+
+        if (!$loginResponse->successful()) {
+            throw new Exception('Falha na autenticação do Gateway 1');
+        }
+
+        $token = $loginResponse->json('token');
+
+        $response = Http::withToken($token)
+            ->post($config['url'] . '/transactions/' . $transactionId . '/charge_back');
+
+        if (!$response->successful()) {
+            throw new Exception('Falha ao processar reembolso no Gateway 1: ' . $response->body());
+        }
+
+        return $response->json();
     }
 
     public function getName(): string
