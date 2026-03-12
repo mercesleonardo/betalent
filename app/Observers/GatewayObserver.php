@@ -9,6 +9,8 @@ class GatewayObserver
 {
     public const LIST_CACHE_KEY = 'gateways.list';
 
+    public const ACTIVE_LIST_CACHE_KEY = 'gateways.active';
+
     public function created(Gateway $gateway): void
     {
         $this->invalidateCache();
@@ -27,5 +29,6 @@ class GatewayObserver
     private function invalidateCache(): void
     {
         Cache::forget(self::LIST_CACHE_KEY);
+        Cache::forget(self::ACTIVE_LIST_CACHE_KEY);
     }
 }
