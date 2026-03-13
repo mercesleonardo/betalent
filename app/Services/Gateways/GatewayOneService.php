@@ -62,9 +62,4 @@ class GatewayOneService implements PaymentGatewayInterface
 
         return $response->json();
     }
-
-    public function getName(): string
-    {
-        return 'GATEWAY_1';
-    }
 }

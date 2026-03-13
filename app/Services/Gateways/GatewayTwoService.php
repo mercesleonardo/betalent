@@ -45,11 +45,6 @@ class GatewayTwoService implements PaymentGatewayInterface
         return $response->json();
     }
 
-    public function getName(): string
-    {
-        return 'GATEWAY_2';
-    }
-
     private function getAuthHeaders(): array
     {
         $config = config('gateways.gateway_two');
